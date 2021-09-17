@@ -11,7 +11,7 @@ pygame.init()
 pygame.display.set_caption("Kriag's Krazy Car Game")
 mainClock = pygame.time.Clock()
 screen = pygame.display.set_mode((1280, 720), 0, 32)
-font = pygame.font.Font("Components\pressStart.ttf", 45)
+font = pygame.font.Font("Assets\Fonts\pressStart.ttf", 45)
 
 
 def text(text, font, color, surface, x, y):
@@ -55,16 +55,16 @@ def mainMenu():
                 quit()
 
         pygame.draw.rect(screen, (191, 10, 48), buttonGame)
-        text("PLAY", pygame.font.Font("Components\pressStart.ttf", 35),
+        text("PLAY", pygame.font.Font("Assets\Fonts\pressStart.ttf", 35),
              (0, 0, 0), screen, 145, 190)
         pygame.draw.rect(screen, (191, 10, 48), buttonControls)
-        text("CONTROLS", pygame.font.Font("Components\pressStart.ttf", 25),
+        text("CONTROLS", pygame.font.Font("Assets\Fonts\pressStart.ttf", 25),
              (0, 0, 0), screen, 110, 293)
         pygame.draw.rect(screen, (191, 10, 48), buttonCredits)
-        text("CREDITS", pygame.font.Font("Components\pressStart.ttf", 30),
+        text("CREDITS", pygame.font.Font("Assets\Fonts\pressStart.ttf", 30),
              (0, 0, 0), screen, 110, 393)
         pygame.draw.rect(screen, (191, 10, 48), buttonQuit)
-        text("QUIT", pygame.font.Font("Components\pressStart.ttf", 35),
+        text("QUIT", pygame.font.Font("Assets\Fonts\pressStart.ttf", 35),
              (0, 0, 0), screen, 145, 490)
 
         click = False
@@ -95,7 +95,7 @@ background.fill((26, 26, 26))
 def game():
     running = True
     pygame.display.set_caption("Kriag's Krazy Car Game")
-    font = pygame.font.Font("Components\pressStart.ttf", 24)
+    font = pygame.font.Font("Assets\Fonts\pressStart.ttf", 24)
     car = player.Player()
     cam = camera.camera()
     timer = gamemode.Timer()
@@ -198,7 +198,7 @@ def controls():
 
         pygame.display.set_caption("Kriag's Krazy Car Game - Controls")
         pygame.draw.rect(screen, (191, 10, 48), banner)
-        text("Kriag's Krazy Controls", pygame.font.Font("Components\pressStart.ttf", 45),
+        text("Kriag's Krazy Controls", pygame.font.Font("Assets\Fonts\pressStart.ttf", 45),
              (0, 0, 0), screen, 70, 25)
 
         x = -50
@@ -218,7 +218,7 @@ def controls():
                 mainMenu()
 
         pygame.draw.rect(screen, (191, 10, 48), buttonBack)
-        text("BACK", pygame.font.Font("Components\pressStart.ttf", 35),
+        text("BACK", pygame.font.Font("Assets\Fonts\pressStart.ttf", 35),
              (0, 0, 0), screen, 65, 635)
 
         click = False
@@ -252,22 +252,22 @@ def credits():
 
         pygame.display.set_caption("Kriag's Krazy Car Game - Credits")
         pygame.draw.rect(screen, (191, 10, 48), buttonBack)
-        text("BACK", pygame.font.Font("Components\pressStart.ttf", 35),
+        text("BACK", pygame.font.Font("Assets\Fonts\pressStart.ttf", 35),
              (0, 0, 0), screen, 65, 635)
 
         text("Credits", font, (0, 0, 0), screen, 20, 20)
         text("Code By", pygame.font.Font(
-            "Components\pressStart.ttf", 32), (191, 10, 48), screen, 115, 135)
+            "Assets\Fonts\pressStart.ttf", 32), (191, 10, 48), screen, 115, 135)
         text("Patrick Taylor", pygame.font.Font(
-            "Components\pressStart.ttf", 22), (10, 10, 10), screen, 140, 190)
+            "Assets\Fonts\pressStart.ttf", 22), (10, 10, 10), screen, 140, 190)
         text("Sound By", pygame.font.Font(
-            "Components\pressStart.ttf", 32), (191, 10, 48), screen, 115, 285)
+            "Assets\Fonts\pressStart.ttf", 32), (191, 10, 48), screen, 115, 285)
         text("Patrick Taylor", pygame.font.Font(
-            "Components\pressStart.ttf", 22), (10, 10, 10), screen, 140, 340)
+            "Assets\Fonts\pressStart.ttf", 22), (10, 10, 10), screen, 140, 340)
         text("Font", pygame.font.Font(
-            "Components\pressStart.ttf", 28), (191, 10, 48), screen, 655, 135)
+            "Assets\Fonts\pressStart.ttf", 28), (191, 10, 48), screen, 655, 135)
         text("Press Start 2P", pygame.font.Font(
-            "Components\pressStart.ttf", 18), (10, 10, 10), screen, 670, 190)
+            "Assets\Fonts\pressStart.ttf", 18), (10, 10, 10), screen, 670, 190)
 
         click = False
         for event in pygame.event.get():

@@ -4,7 +4,7 @@ from pygame.locals import *
 
 
 def renderImage(file, transparent=True):
-    filename = os.path.join('Images', file)
+    filename = os.path.join('Assets/Images', file)
     image = pygame.image.load(filename)
     if transparent == True:
         image = image.convert()
