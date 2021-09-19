@@ -1,6 +1,4 @@
-import math
-import tracks
-import pygame
+import pygame, math, tracks
 from pygame.locals import *
 from random import randint
 from render import renderImage
@@ -9,10 +7,10 @@ centreX = -1
 centreY = -1
 
 
-def rot_center(image, rect, angle):
-    rot_image = pygame.transform.rotate(image, angle)
-    rot_rect = rot_image.get_rect(center=rect.center)
-    return rot_image, rot_rect
+def rotCentre(image, rect, angle):
+    rotImage = pygame.transform.rotate(image, angle)
+    rotRect = rotImage.get_rect(center=rect.center)
+    return rotImage, rotRect
 
 
 def findspawn():
@@ -41,7 +39,7 @@ class Player(pygame.sprite.Sprite):
         self.dir = 0
         self.speed = 0.0
         self.maxspeed = 20.25
-        self.minspeed = -1.95
+        self.minSpeed = -1.95
         self.acceleration = 0.095
         self.brakeForce = 0.45
         self.idleSpeed = 0.05
@@ -52,14 +50,14 @@ class Player(pygame.sprite.Sprite):
         self.y = int(pygame.display.Info().current_h / 2)
         self.speed = 0.0
         self.dir = 0
-        self.image, self.rect = rot_center(
+        self.image, self.rect = rotCentre(
             self.image_orig, self.rect, self.dir)
         self.rect.topleft = self.x, self.y
         self.x, self.y = findspawn()
 
     def impact(self):
         if self.speed > 0:
-            self.speed = self.minspeed
+            self.speed = self.minSpeed
 
     def idle(self):
         if self.speed > 0:
@@ -72,21 +70,21 @@ class Player(pygame.sprite.Sprite):
             self.speed = self.speed + self.acceleration
 
     def brake(self):
-        if self.speed > self.minspeed:
+        if self.speed > self.minSpeed:
             self.speed = self.speed - self.brakeForce
 
     def steerLeft(self):
         self.dir = self.dir+self.steering
         if self.dir > 360:
             self.dir = 0
-        self.image, self.rect = rot_center(
+        self.image, self.rect = rotCentre(
             self.image_orig, self.rect, self.dir)
 
     def steerRight(self):
         self.dir = self.dir-self.steering
         if self.dir < 0:
             self.dir = 360
-        self.image, self.rect = rot_center(
+        self.image, self.rect = rotCentre(
             self.image_orig, self.rect, self.dir)
 
     def update(self, last_x, last_y):

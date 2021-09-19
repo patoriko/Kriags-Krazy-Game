@@ -1,17 +1,58 @@
-import sys
-import pygame
+import pygame, sys
 import player
 import tracks
 import camera
 import gamemode
+import engine as e
 from pygame.locals import *
 from render import renderImage
 
-pygame.init()
-pygame.display.set_caption("Kriag's Krazy Car Game")
+# -------------------------------------------- #
+
+def loadVideoSettings():
+    global scale
+    f = open('settings.txt','r')
+    dat = f.read()
+    scale = int(dat[0])
+    f.close()
+    return dat[1]
+def saveVideoSettings():
+    global fullscreen, scale
+    f = open('settings.txt','w')
+    f.write(str(scale) + fullscreen)
+    f.close()
+
+# -------------------------------------------- #
+
 mainClock = pygame.time.Clock()
-screen = pygame.display.set_mode((1280, 720), 0, 32)
-font = pygame.font.Font("Assets\Fonts\pressStart.ttf", 45)
+
+pygame.mixer.pre_init(44100, -16, 2, 512)
+pygame.init()
+pygame.mixer.set_num_channels(64)
+pygame.display.set_caption('Kriag Krazy Game')
+
+iconImg = pygame.image.load('Assets\icon.png')
+pygame.display.set_icon(iconImg)
+
+global displayDimensions, scale, fullscreen
+displayDimensions = [512,288]
+fullscreen = loadVideoSettings()
+global screen
+if fullscreen == 'n':
+    screen = pygame.display.set_mode((displayDimensions[0] * scale, displayDimensions[1] * scale),0,32)
+else:
+    screen = pygame.display.set_mode((displayDimensions[0] * scale, displayDimensions[1] * scale),pygame.FULLSCREEN)
+display = pygame.Surface(displayDimensions)
+
+pygame.mouse.set_visible(True)
+
+# -------------------------------------------- #
+
+global font
+pressStart = pygame.font.Font('Assets\Fonts\pressStart.ttf', 45)
+
+global framerate
+framerate = 75
 
 
 def text(text, font, color, surface, x, y):
@@ -26,13 +67,14 @@ click = False
 centreWidth = -1
 centreHeight = -1
 
+# -------------------------------------------- #
 
 def mainMenu():
     while True:
 
         screen.fill((243, 243, 243))
         pygame.display.set_caption("Kriag's Krazy Car Game - Menu")
-        text("Kriag's Krazy Car Game", font, (0, 0, 0), screen, 20, 20)
+        text("Kriag's Krazy Car Game", pressStart, (0, 0, 0), screen, 20, 20)
 
         mx, my = pygame.mouse.get_pos()
 
@@ -55,16 +97,16 @@ def mainMenu():
                 quit()
 
         pygame.draw.rect(screen, (191, 10, 48), buttonGame)
-        text("PLAY", pygame.font.Font("Assets\Fonts\pressStart.ttf", 35),
+        text('PLAY', pygame.font.Font('Assets\Fonts\pressStart.ttf', 35),
              (0, 0, 0), screen, 145, 190)
         pygame.draw.rect(screen, (191, 10, 48), buttonControls)
-        text("CONTROLS", pygame.font.Font("Assets\Fonts\pressStart.ttf", 25),
+        text('CONTROLS', pygame.font.Font('Assets\Fonts\pressStart.ttf', 25),
              (0, 0, 0), screen, 110, 293)
         pygame.draw.rect(screen, (191, 10, 48), buttonCredits)
-        text("CREDITS", pygame.font.Font("Assets\Fonts\pressStart.ttf", 30),
+        text('CREDITS', pygame.font.Font('Assets\Fonts\pressStart.ttf', 30),
              (0, 0, 0), screen, 110, 393)
         pygame.draw.rect(screen, (191, 10, 48), buttonQuit)
-        text("QUIT", pygame.font.Font("Assets\Fonts\pressStart.ttf", 35),
+        text('QUIT', pygame.font.Font('Assets\Fonts\pressStart.ttf', 35),
              (0, 0, 0), screen, 145, 490)
 
         click = False
@@ -81,7 +123,7 @@ def mainMenu():
                     click = True
 
         pygame.display.update()
-        mainClock.tick(75)
+        mainClock.tick(framerate)
 
 
 centreWidth = int(pygame.display.Info().current_w / 2)
@@ -91,11 +133,12 @@ background = pygame.Surface(screen.get_size())
 background = background.convert_alpha()
 background.fill((26, 26, 26))
 
+# -------------------------------------------- #
 
 def game():
     running = True
     pygame.display.set_caption("Kriag's Krazy Car Game")
-    font = pygame.font.Font("Assets\Fonts\pressStart.ttf", 24)
+    font = pygame.font.Font('Assets\Fonts\pressStart.ttf', 24)
     car = player.Player()
     cam = camera.camera()
     timer = gamemode.Timer()
@@ -151,11 +194,11 @@ def game():
         textposFPS = textFPS.get_rect(centery=25, centerx=90)
 
         textTimer = font.render('Timer: ' + str(int((timer.timeleft / 60)/60)) +
-                                ":" + str(int((timer.timeleft / 60) % 60)), 1, (224, 16, 16))
+                                ': ' + str(int((timer.timeleft / 60) % 60)), 1, (224, 16, 16))
         textposTimer = textFPS.get_rect(centery=75, centerx=95)
 
         textSpeed = font.render('Speed: ' + str(int((car.speed / 60)/60)) +
-                                ":" + str(int((car.speed / 60) % 60)), 1, (224, 16, 16))
+                                ': ' + str(int((car.speed / 60) % 60)), 1, (224, 16, 16))
         textposSpeed = textFPS.get_rect(centery=125, centerx=95)
 
         screen.blit(background, (0, 0))
@@ -184,8 +227,9 @@ def game():
             timer.generateFinish()
             timerSprite.add(timer)
 
-        mainClock.tick(75)
+        mainClock.tick(framerate)
 
+# -------------------------------------------- #
 
 def controls():
     running = True
@@ -198,13 +242,13 @@ def controls():
 
         pygame.display.set_caption("Kriag's Krazy Car Game - Controls")
         pygame.draw.rect(screen, (191, 10, 48), banner)
-        text("Kriag's Krazy Controls", pygame.font.Font("Assets\Fonts\pressStart.ttf", 45),
+        text("Kriag's Krazy Controls", pygame.font.Font('Assets\Fonts\pressStart.ttf', 45),
              (0, 0, 0), screen, 70, 25)
 
         x = -50
         y = 100
 
-        imageControls = renderImage("controls.jpg")
+        imageControls = renderImage('controls.jpg')
 
         def controlsImage(x, y):
             screen.blit(imageControls, (x, y))
@@ -218,7 +262,7 @@ def controls():
                 mainMenu()
 
         pygame.draw.rect(screen, (191, 10, 48), buttonBack)
-        text("BACK", pygame.font.Font("Assets\Fonts\pressStart.ttf", 35),
+        text('BACK', pygame.font.Font('Assets\Fonts\pressStart.ttf', 35),
              (0, 0, 0), screen, 65, 635)
 
         click = False
@@ -234,8 +278,9 @@ def controls():
                     click = True
 
         pygame.display.update()
-        mainClock.tick(75)
+        mainClock.tick(framerate)
 
+# -------------------------------------------- #
 
 def credits():
     running = True
@@ -252,22 +297,23 @@ def credits():
 
         pygame.display.set_caption("Kriag's Krazy Car Game - Credits")
         pygame.draw.rect(screen, (191, 10, 48), buttonBack)
-        text("BACK", pygame.font.Font("Assets\Fonts\pressStart.ttf", 35),
+        text('BACK', pygame.font.Font('Assets\Fonts\pressStart.ttf', 35),
              (0, 0, 0), screen, 65, 635)
 
-        text("Credits", font, (0, 0, 0), screen, 20, 20)
-        text("Code By", pygame.font.Font(
-            "Assets\Fonts\pressStart.ttf", 32), (191, 10, 48), screen, 115, 135)
-        text("Patrick Taylor", pygame.font.Font(
-            "Assets\Fonts\pressStart.ttf", 22), (10, 10, 10), screen, 140, 190)
-        text("Sound By", pygame.font.Font(
-            "Assets\Fonts\pressStart.ttf", 32), (191, 10, 48), screen, 115, 285)
-        text("Patrick Taylor", pygame.font.Font(
-            "Assets\Fonts\pressStart.ttf", 22), (10, 10, 10), screen, 140, 340)
-        text("Font", pygame.font.Font(
-            "Assets\Fonts\pressStart.ttf", 28), (191, 10, 48), screen, 655, 135)
-        text("Press Start 2P", pygame.font.Font(
-            "Assets\Fonts\pressStart.ttf", 18), (10, 10, 10), screen, 670, 190)
+        text('Credits', pygame.font.Font(
+            'Assets\Fonts\pressStart.ttf', 32), (0, 0, 0), screen, 20, 20)
+        text('Code By', pygame.font.Font(
+            'Assets\Fonts\pressStart.ttf', 32), (191, 10, 48), screen, 115, 135)
+        text('Patrick Taylor', pygame.font.Font(
+            'Assets\Fonts\pressStart.ttf', 22), (10, 10, 10), screen, 140, 190)
+        text('Sound By', pygame.font.Font(
+            'Assets\Fonts\pressStart.ttf', 32), (191, 10, 48), screen, 115, 285)
+        text('Patrick Taylor', pygame.font.Font(
+            'Assets\Fonts\pressStart.ttf', 22), (10, 10, 10), screen, 140, 340)
+        text('Font', pygame.font.Font(
+            'Assets\Fonts\pressStart.ttf', 28), (191, 10, 48), screen, 655, 135)
+        text('Press Start 2P', pygame.font.Font(
+            'Assets\Fonts\pressStart.ttf', 18), (10, 10, 10), screen, 670, 190)
 
         click = False
         for event in pygame.event.get():
@@ -282,8 +328,9 @@ def credits():
                     click = True
 
         pygame.display.update()
-        mainClock.tick(75)
+        mainClock.tick(framerate)
 
+# -------------------------------------------- #
 
 def quit():
     running = True
@@ -291,5 +338,6 @@ def quit():
         pygame.quit()
         sys.exit()
 
+# -------------------------------------------- #
 
 mainMenu()

@@ -1,5 +1,4 @@
-import os
-import pygame.image
+import pygame.image, os
 from pygame.locals import *
 
 

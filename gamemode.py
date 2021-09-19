@@ -1,5 +1,4 @@
-import tracks
-import pygame
+import pygame, tracks
 from pygame.locals import *
 from random import randint
 from render import renderImage
@@ -11,6 +10,7 @@ tileSize = 1000
 timerFull = 2500
 extraTime = timerFull / 2
 
+# -------------------------------------------- #
 
 class Timer(pygame.sprite.Sprite):
     def finishLap(self):
